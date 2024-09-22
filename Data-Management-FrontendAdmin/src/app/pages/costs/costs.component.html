@@ -1,0 +1,110 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <p class="lead fs-6 headline mt-2"><b>Costs</b></p>
+    <div class="table-main table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Agreement ID</th>
+            <th>Provider</th>
+            <th>Consumer</th>
+            <th>Provider Reimbursement</th>
+            <th>Consumer Refund</th>
+            <th>Provider Bank Details</th>
+            <th>Consumer Bank Details</th>
+            <th>Completed At</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="costData.length === 0">
+            <td colspan="12" class="pb-5">
+              <div class="center pt-5 pb-3">
+                <img
+                  src="../../../assets/images/empty_table.svg"
+                  alt="et"
+                  width="100px"
+                />
+              </div>
+              <p class="lead text-danger">No Records Found !</p>
+            </td>
+          </tr>
+          <tr *ngFor="let item of costData | paginate : config">
+            <td matTooltip="{{ item.id }}" [matTooltipPosition]="'above'">
+              {{ item.id }}
+            </td>
+            <td
+              matTooltip="{{ item.agreement }}"
+              [matTooltipPosition]="'above'"
+            >
+              {{
+                item.agreement.length > 20
+                  ? item.agreement
+                  : item.agreement ? "N/A" : "Rejected"
+              }}
+            </td>
+            <td>{{ item.dataProvider }}</td>
+            <td>{{ item.dataConsumer }}</td>
+            <td>{{ item.providerReimbursement }}</td>
+            <td>{{ item.consumerRefund || "N/A" }}</td>
+            <td>
+              <button
+                mat-icon-button
+                matTooltip="View"
+                [matTooltipPosition]="'above'"
+                class="bg-transparent"
+                (click)="openBankDetails(item.dataProvider)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+            <td>
+              <button
+                mat-icon-button
+                matTooltip="View"
+                [matTooltipPosition]="'above'"
+                class="bg-transparent"
+                (click)="openBankDetails(item.dataConsumer)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+
+            <td>{{ item.createdAt }}</td>
+            <td>
+              <div class="d-flex justify-content-center">
+                <button
+                  *ngIf="item.released"
+                  class="btn btn-sm update-btn btn-main2"
+                  (click)="ReleasedModalOpen(item)"
+                >
+                  Release
+                </button>
+                <button
+                  *ngIf="item.view"
+                  mat-icon-button
+                  matTooltip="View"
+                  [matTooltipPosition]="'above'"
+                  class="bg-transparent"
+                  (click)="viewTransactions(item.id)"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngIf="costData.length > 10">
+      <div class="d-flex justify-content-end mt-2">
+        <pagination-controls
+          (pageChange)="config.currentPage = $event"
+          class="my-pagination"
+        >
+        </pagination-controls>
+      </div>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,329 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <p class="lead fs-6 headline"><b>Historical Offer</b></p>
+    <span class="sp-hr"></span>
+    <div class="mt-2">
+      <form [formGroup]="offerForm">
+        <div class="row mx-0 mb-1 p-0">
+          <!-- <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Sensor ID</label>
+              <div style="display: flex; align-items: center;">
+              <select name="" id="s_o" formControlName="monitoredAsset" class="form-control-select" [(ngModel)] = "sensorID" (ngModelChange)="sensorDataChange($event)">
+                <option value="" disabled>Select Sensor ID</option>
+                <option value="{{item.Record.monitered_asset}}" *ngFor="let item of allRequests">{{item.Record.monitered_asset}}</option>
+              </select>  
+              </div>
+            </div> -->
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Sensor ID</label>
+            <div style="display: flex; align-items: center">
+              <select
+                name=""
+                id="s_o"
+                formControlName="monitoredAsset"
+                class="form-control-select"
+                [(ngModel)]="sensorID"
+                (ngModelChange)="sensorDataChange($event)"
+              >
+                <option value="" disabled>Select Sensor ID</option>
+                <option *ngFor="let sensor of sensorData" [value]="sensor">
+                  {{ sensor }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Offer ID</label>
+            <input
+              type="text"
+              formControlName="id"
+              class="form-control"
+              placeholder="Enter Offer ID"
+            />
+          </div>
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Departure Date</label>
+            <mat-form-field class="form-control">
+              <!-- <input matInput [matDatepicker]="dp1" [disabled]=true [min]="current_Date" formControlName="startDate"
+                  (ngModelChange)="onStartDateChange()">
+                <mat-datepicker-toggle matSuffix [for]="dp1"></mat-datepicker-toggle>
+                <mat-datepicker #dp1 disabled="false"></mat-datepicker> -->
+
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp1"
+                (ngModelChange)="onStartDateChange()"
+                formControlName="startDate"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp1)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp1
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Arrival Date</label>
+            <mat-form-field class="form-control">
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp2"
+                (ngModelChange)="onStartDateChange1()"
+                [min]="offerForm.controls.startDate.value"
+                formControlName="endDate"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp2)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp2
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+
+          <!-- <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <ng-container>
+                <label class="f-label">Select Journey ID</label>
+                <select name="journeyID" id="journeyID" formControlName="journeyID" class="form-control-select"  
+                [(ngModel)] = "journeyID != undefined ? journeyID : selectedJourneyId"
+                (ngModelChange)="journeyDataChange($event)">
+                  <option value="{{journeyID}}" selected>{{journeyID != undefined ? journeyID : 'Select Journey ID'}}</option>
+                  <option value="{{item.journey_uid}}" *ngFor="let item of journeyData" [disabled]="item.journey_uid == journeyID">{{item.journey_uid}}</option>
+                </select>
+              </ng-container>
+          
+            </div> -->
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <ng-container>
+              <label class="f-label">Select Journey ID</label>
+              <select
+                name="journeyID"
+                id="journeyID"
+                formControlName="journeyID"
+                class="form-control-select"
+                [(ngModel)]="
+                  journeyID != undefined ? journeyID : selectedJourneyId
+                "
+                (ngModelChange)="journeyDataChange($event)"
+              >
+                <option value="{{ journeyID }}" selected>
+                  {{ journeyID != undefined ? journeyID : "Select Journey ID" }}
+                </option>
+                <option
+                  value="{{ item.journey_uid }}"
+                  *ngFor="let item of journeyDataSelection"
+                  [disabled]="item.journey_uid == journeyID"
+                >
+                  {{ item.journey_uid }}
+                </option>
+              </select>
+            </ng-container>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <ng-container>
+              <label class="f-label">Select Multiple Offer ID</label>
+              <mat-form-field class="form-control">
+                <mat-select
+                  [formControl]="offerIDs"
+                  [(value)]="selectedOfferID"
+                  multiple
+                  (selectionChange)="offerDataChange($event)"
+                >
+                  <mat-option
+                    *ngFor="let offer of offerData"
+                    [value]="offer.id"
+                    style="font-size: 14px;"
+                    >{{
+                      offer.id 
+                    }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <!-- <mat-select placeholder="Toppings" [formControl]="toppings" [(value)]="selectedToppings" multiple>
+                  <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+                </mat-select>
+              </mat-form-field> -->
+              <!-- <p>
+                {{selectedToppings | json}}
+              </p> -->
+            </ng-container>
+          </div>
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Validity</label>
+            <div class="row m-0 p-0">
+              <div class="col-6 ps-0">
+                <button
+                  class="btn btn-main w-100"
+                  [ngClass]="{ 'btn-main-active': setVal }"
+                  (click)="setValidity(true)"
+                >
+                  True
+                </button>
+              </div>
+              <div class="col-6 pe-0">
+                <button
+                  class="btn btn-main w-100"
+                  [ngClass]="{ 'btn-main-active': !setVal }"
+                  (click)="setValidity(false)"
+                >
+                  False
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Data Owner</label>
+            <input
+              type="text"
+              formControlName="dataOwner"
+              class="form-control"
+              placeholder="Enter Data Owner"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Equipments</label>
+            <input
+              type="text"
+              formControlName="equipment"
+              class="form-control"
+              placeholder="Enter Equipments"
+            />
+          </div>
+          <!-- <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Asset</label>
+              <input type="text" formControlName="monitoredAsset" class="form-control" placeholder="Enter Asset">
+            </div> -->
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Processing Level</label>
+            <input
+              type="text"
+              formControlName="processingLevel"
+              class="form-control"
+              placeholder="Enter Processing Level"
+            />
+          </div>
+          <div
+          class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+        >
+          <label class="f-label">Price</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text" id="basic-addon1">£</span>
+            <input
+              type="number"
+              min="0"
+              formControlName="price"
+              class="form-control"
+              placeholder="Enter Data Price"
+              aria-label="Username"
+              aria-describedby="basic-addon1"
+              (change)="priceChange($event)"  
+            />
+          </div>
+        </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Total Price</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">£</span>
+              <input
+                type="number"
+                min="0"
+                formControlName="total_price"
+                class="form-control"
+                placeholder="Total Data Price"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Deposit</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">£</span>
+              <input
+                type="number"
+                min="0"
+                formControlName="deposit"
+                class="form-control"
+                placeholder="Enter Deposit"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+          </div>
+          <!-- <div class="my-0 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Upload Document</label>
+              <div class="main-w">
+                <div class="button-wrap">
+                  <label class="new-button" for="upload"><i class="fa fa-cloud-upload"></i> Choose File
+                    <input id="upload" type="file" accept="application/pdf">
+                  </label>&nbsp;<span style="color: #ffffff;">
+                    file path here ...
+                  </span>
+                </div>
+              </div>
+            </div> -->
+        </div>
+      </form>
+      <div class="row mb-3 mx-1 mx-sm-1 mx-md-0 mx-lg-0">
+        <div class="col d-none d-sm-none d-md-block"></div>
+        <div
+          class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-end"
+        >
+          <button class="btn add-btn btn-main2" (click)="submitOffer()">
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div style="opacity: 0.5; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff;"
+  *ngIf="isLoading">
+  <div class="d-flex justify-content-center align-items-center h-100">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

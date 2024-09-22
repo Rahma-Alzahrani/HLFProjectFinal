@@ -1,0 +1,90 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <div
+      style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #e5e5e5;
+        height: 4rem;
+      "
+    >
+      <div class="d-flex justify-content-start">
+        <p class="lead fs-6 headline"><b>Provider Details</b></p>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search"
+            aria-label="Search"
+            aria-describedby="basic-addon2"
+            [(ngModel)]="searchText"
+            (ngModelChange)="searchProvider()"
+          />
+          <span class="input-group-text" id="basic-addon2"
+            ><i class="fa fa-search"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-main table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>Provider ID</th>
+            <th>Email</th>
+            <th>Organization Name</th>
+            <th>Created Date</th>
+            <th>Bank Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="providerData.length === 0">
+            <td colspan="12" class="pb-5">
+              <div class="center pt-5 pb-3">
+                <img
+                  src="../../../assets/images/empty_table.svg"
+                  alt="et"
+                  width="100px"
+                />
+              </div>
+              <p class="lead text-danger">No Records Found !</p>
+            </td>
+          </tr>
+          <ng-container>
+            <tr *ngFor="let item of providerData | paginate : config">
+              <td>{{ item.id }}</td>
+              <td>{{ item.email }}</td>
+              <td>{{ item.orgname }}</td>
+              <td>{{ item.updatedAt }}</td>
+
+              <button
+                mat-icon-button
+                matTooltip="View"
+                [matTooltipPosition]="'above'"
+                class="bg-transparent"
+                (click)="ViewBankDetails(item.email)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <ng-container *ngIf="providerData.length > 10">
+      <div class="d-flex justify-content-end mt-2">
+        <pagination-controls
+          (pageChange)="config.currentPage = $event"
+          class="my-pagination"
+        >
+        </pagination-controls>
+      </div>
+    </ng-container>
+  </div>
+</div>

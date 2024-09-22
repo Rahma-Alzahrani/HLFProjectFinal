@@ -1,0 +1,28 @@
+<div class="bg-main vh-100">
+  <div class="container col-xl-10 col-xxl-8 px-4 py-4">
+    <div class="row align-items-center g-lg-6 py-4">
+      <div class="col-md-10 mx-auto col-lg-6 mt-2">
+        <div class="p-4 p-md-5 card border-0 shadow bg-white">
+          <h2>Admin</h2>
+         
+          <form [formGroup]="loginform">
+            <div class="mb-3">
+              <label class="f-label">Email</label>
+              <input type="email" formControlName="email" class="form-control" placeholder="Enter Your Email">
+            </div>
+            <div class="mb-3">
+              <label class="f-label">Password</label>
+              <input type="password" formControlName="password" class="form-control" placeholder="Enter Password">
+            </div>
+         
+          </form>
+          <button class="w-100 btn btn-main2 ls-btn mx-0 mt-2" [disabled]="loginform.invalid" (click)="login()"><b>Login</b></button>
+          <br>
+          <div class="text-center mt-3">
+            <small class="text-muted">Forgot Password?  <span class="link" [routerLink]="['/auth/forgot-password']">Click Here</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

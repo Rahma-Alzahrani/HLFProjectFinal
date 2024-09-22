@@ -1,0 +1,58 @@
+<div class="router-wrapper">
+    <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+        <p class="lead fs-6 headline"><b>Journey Details</b></p>
+        <div class="table-main table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>UID</th>
+                        <th>Type</th>
+                        <th>Category</th>
+                        <th>Days</th>
+                        <th>Journey Name</th>
+                        <th>Operator</th>
+                        <th>Document Type</th>
+                        <th>Valid From</th>
+                        <th>Valid To</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="allRequests.length==0">
+                        <td colspan="12" class="pb-5">
+                            <div class="center pt-5 pb-3">
+                                <img src="../../../assets/images/empty_table.svg" alt="et" width="100px">
+                            </div>
+                            <p class="lead text-danger">No Records Found !</p>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let item of allRequests | paginate:config; let i=index">
+                        <td>{{item.uid}}</td>
+                        <td>{{item.type}}</td>
+                        <td>{{item.cat}}</td>
+                        <td>{{item.days}}</td>
+                        <td>{{item.journey}}</td>
+                        <td>{{item.operator}}</td>
+                        <td>{{item.docType}}</td>
+                        <td>{{item.valid_from}}</td>
+                        <td>{{item.valid_to}}</td>
+                        <td>{{currentDate > item.valid_to ? 'Expired' : 'Active'}}</td>
+
+                        <td>
+                            <div class="d-flex justify-content-center">
+                                <div *ngIf="currentDate > item.valid_to" class="nonactive">{{"Expired"}}</div>
+                                <button *ngIf="currentDate <= item.valid_to"  class="btn btn-sm btn-main2-acc" (click)="selectJourney(item)">Select</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <ng-container *ngIf="allRequests.length>10">
+                <pagination-controls (pageChange)="pageChange($event)" [responsive]="true"></pagination-controls>
+            </ng-container>
+        </div>
+    </div>
+</div>

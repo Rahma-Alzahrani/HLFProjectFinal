@@ -1,0 +1,16 @@
+<!-- <div mat-dialog-close="data.offerID" class="close">X</div> -->
+<h1 mat-dialog-title class="text-center"
+>OfferId List</h1>
+<div mat-dialog-content>
+  <ol>
+    <li *ngFor="let file of data.offerID">
+      {{ file }}
+    </ol>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial  class="btn btn-sm btn-main2"
+    style="align-items: center;"
+    >Close</button>
+  <!-- <button mat-button mat-dialog-close>No</button> -->
+  <!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
+</div>

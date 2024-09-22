@@ -1,0 +1,249 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <p class="lead fs-6 headline"><b>New Offer</b></p>
+    <span class="sp-hr"></span>
+    <div class="mt-2">
+      <form [formGroup]="offerForm">
+        <div class="row mx-0 mb-1 p-0">
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Offer ID</label>
+            <input
+              type="text"
+              formControlName="id"
+              class="form-control"
+              placeholder="Enter Offer ID"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <ng-container>
+              <label class="f-label">Select Journey ID</label>
+              <select
+                name="journeyID"
+                id="journeyID"
+                formControlName="journeyID"
+                class="form-control-select"
+                [(ngModel)]="
+                  journeyID != undefined ? journeyID : selectedJourneyId
+                "
+                (ngModelChange)="journeyDataChange($event)"
+              >
+                <option value="{{ journeyID }}" selected>
+                  {{ journeyID != undefined ? journeyID : "Select Journey ID" }}
+                </option>
+                <option
+                  value="{{ item.uid }}"
+                  *ngFor="let item of journeyData"
+                  [disabled]="item.uid == journeyID"
+                >
+                  {{ item.uid }}
+                </option>
+              </select>
+            </ng-container>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Departure Time</label>
+            <mat-form-field class="form-control">
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp1"
+                (ngModelChange)="onStartDateChange()"
+                [min]="current_Date"
+                formControlName="startDate"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp1)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp1
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Arrival Time</label>
+            <mat-form-field class="form-control">
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp2"
+                (ngModelChange)="onStartDateChange()"
+                [min]="offerForm.controls.startDate.value"
+                formControlName="endDate"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp2)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp2
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Validity</label>
+            <div class="row m-0 p-0">
+              <div class="col-6 ps-0">
+                <button
+                  class="btn btn-main w-100"
+                  [ngClass]="{ 'btn-main-active': setVal }"
+                  (click)="setValidity(true)"
+                >
+                  True
+                </button>
+              </div>
+              <div class="col-6 pe-0">
+                <button
+                  class="btn btn-main w-100"
+                  [ngClass]="{ 'btn-main-active': !setVal }"
+                  (click)="setValidity(false)"
+                >
+                  False
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Data Owner</label>
+            <input
+              type="text"
+              formControlName="dataOwner"
+              class="form-control"
+              placeholder="Enter Data Owner"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Equipments</label>
+            <input
+              type="text"
+              formControlName="equipment"
+              class="form-control"
+              placeholder="Enter Equipments"
+            />
+          </div>
+
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Sensor ID</label>
+            <div style="display: flex; align-items: center">
+              <select
+                name="select_offer"
+                id="s_o"
+                formControlName="monitoredAsset"
+                class="form-control-select"
+                *ngIf="isClicked == false"
+              >
+                <option value="" disabled>Select Sensor ID</option>
+                <option value="{{ item }}" *ngFor="let item of sensorData">
+                  {{ item }}
+                </option>
+              </select>
+              <input
+                type="text"
+                formControlName="monitoredAsset"
+                class="form-control"
+                placeholder="Enter Sensor ID"
+                *ngIf="isClicked == true"
+              />
+              <button
+                class="btn btn-main w-10"
+                (click)="getHashDatabyOfferId()"
+                *ngIf="isClicked == false"
+              >
+                Create
+              </button>
+              <button
+                class="btn btn-main w-10"
+                (click)="getHashDatabyOfferId()"
+                *ngIf="isClicked == true"
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Processing Level</label>
+            <input
+              type="text"
+              formControlName="processingLevel"
+              class="form-control"
+              placeholder="Enter Processing Level"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Price</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">£</span>
+              <input
+                type="number"
+                min="0"
+                formControlName="price"
+                class="form-control"
+                placeholder="Enter Data Price"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Deposit</label>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">£</span>
+              <input
+                type="number"
+                min="0"
+                formControlName="deposit"
+                class="form-control"
+                placeholder="Enter Deposit"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+              />
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-3 mx-1 mx-sm-1 mx-md-0 mx-lg-0">
+        <div class="col d-none d-sm-none d-md-block"></div>
+        <div
+          class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-end"
+        >
+          <button
+            [disabled]="offerForm.invalid"
+            class="btn add-btn btn-main2"
+            (click)="submitOffer()"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,115 @@
+<!-- <div mat-dialog-close="data.offerID" class="close">X</div> -->
+<div *ngIf="data.type==='offer'" class="dialog-box">
+  <div mat-dialog-close="data.offerID" class="close">X</div>
+
+<h1 mat-dialog-title class="text-center"
+>OfferId List</h1>
+<div mat-dialog-content>
+  <ol>
+    <li *ngFor="let file of data.offerID">
+      {{ file }}
+    </ol>
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial  class="btn btn-sm btn-main2"
+    style="align-items: center;"
+    >Close</button>
+  <!-- <button mat-button mat-dialog-close>No</button> -->
+  <!-- <button mat-button mat-dialog-close cdkFocusInitial>Ok</button> -->
+</div>
+</div>
+
+<!-- <div mat-dialog-close="data.offerID" class="close">X</div> -->
+<div *ngIf="data.type==='costs'" class="dialog-box">
+  <div mat-dialog-close="data.offerID" class="close">X</div>
+
+  <h1 mat-dialog-title class="text-center" >Realease Transaction</h1>
+  <div>
+  <div mat-dialog-content style="margin-bottom: 1rem;">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="lead fs-6">Provider Transaction</p>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" [(ngModel)]="this.providerTransaction">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 1rem;">
+      <div class="col-md-6">
+        <p class="lead fs-6">Consumer Transaction</p>
+      </div>
+      <div class="col-md-6">
+        <input type="text" class="form-control" [(ngModel)]="this.consumerTransaction">
+      </div>
+    
+    </div>
+  </div>
+  <div mat-dialog-actions style="justify-content: center;">
+    <button mat-button mat-dialog-close cdkFocusInitial  class="btn btn-sm btn-main2"
+    *ngIf="!this.transactionStatus"
+    style="align-items: center;"
+    (click)="releaseTransaction(data.costID)"
+    >Save</button>
+    <button mat-button mat-dialog-close cdkFocusInitial  class="btn btn-sm btn-main2"
+    *ngIf="this.transactionStatus"
+    style="align-items: center;"
+    (click)="updateReleaseTransaction(data.costID)"
+    >Update</button>
+ 
+  </div>
+</div>
+</div>
+
+
+<div *ngIf="data.type==='bank'" class="dialog-box">
+  <div mat-dialog-close="data.offerID" class="close">X</div>
+  <h1 mat-dialog-title class="text-center" >Realease Transaction</h1>
+  <div>
+    <!-- const bankName = req.body.bankName;
+    const bankAccountNumber = req.body.bankAccountNumber;
+    const bankAccountHolderName = req.body.bankAccountHolderName;
+    const bankAccountIFSC = req.body.bankAccountIFSC; -->
+  
+    <div mat-dialog-content style="margin-bottom: 1rem;">
+      <div class="row">
+        <div class="col-md-6">
+          <p class="lead fs-6">Bank Name</p>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" [(ngModel)]="this.bankName" disabled>
+        </div>
+      </div>
+  
+      <div class="row" style="margin-top: 1rem;">
+        <div class="col-md-6">
+          <p class="lead fs-6">Bank Account Number</p>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" [(ngModel)]="this.bankAccountNumber" disabled>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top: 1rem;">
+        <div class="col-md-6">
+          <p class="lead fs-6">Bank Account Holder Name</p>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" [(ngModel)]="this.bankAccountHolderName" disabled>
+        </div>
+      
+      </div>
+
+      <div class="row" style="margin-top: 1rem;">
+        <div class="col-md-6">
+          <p class="lead fs-6">Bank Account IFSC</p>
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" [(ngModel)]="this.bankAccountIFSC" disabled>
+        </div>
+      
+      </div>
+
+    </div>
+</div>
+</div>

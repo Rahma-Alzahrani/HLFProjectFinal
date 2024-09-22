@@ -1,0 +1,615 @@
+<html>
+
+<head>
+
+	<title>Sensor Simulato 1.0</title>
+
+	<script type="text/javascript" src="assets/js/addclasskillclass.js"></script>
+	<script type="text/javascript" src="assets/js/attachevent.js"></script>
+	<script type="text/javascript" src="assets/js/addcss.js"></script>
+	<script type="text/javascript" src="assets/js/tabtastic.js"></script>
+	<script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+	<!-- <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script> -->
+	<!-- <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.min.js"></script>
+	<!--link rel="stylesheet" type="text/css" href="assets/css/tabtastic.css"-->
+	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
+	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+
+
+	<script type = "text/javascript">
+
+		function scheduleDevice(startTime ,endTime)
+		{
+			var currentTime= new Date()
+			logMsg("current time : "+currentTime);
+			var sheducleStartTime=new Date(startTime);
+			logMsg("start time : "+sheducleStartTime);
+			var startDateTime=sheducleStartTime.getTime()-currentTime.getTime();
+			logMsg("start milli : "+startDateTime);
+			window.setTimeout(startTransaction, startDateTime);
+
+			var sheducleEndTime=new Date(endTime);
+			var endDateTime=sheducleEndTime.getTime()-currentTime.getTime();
+			logMsg("end milli : "+endDateTime);
+
+
+			window.setTimeout(stopTransaction,endDateTime);
+
+			logMsg("Device scheduled to send data from :"+sheducleStartTime+": to :"+sheducleEndTime);
+			countdownTimeStart(sheducleStartTime.getTime());
+
+
+		}
+
+		function countdownTimeStart(countdown){
+
+					//var countDownDate = new Date("Sep 25, 2025 15:00:00").getTime();
+
+					// Update the count down every 1 second
+					var x = setInterval(function() {
+
+						// Get todays date and time
+						var now = new Date().getTime();
+						
+						// Find the distance between now an the count down date
+						var distance = countdown - now;
+						
+						// Time calculations for days, hours, minutes and seconds
+						var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+						
+						// Output the result in an element with id="demo"
+						//console.clear();
+						//$('#console').empty();
+						//$('#console').removeChild($('#console').lastChild);
+						document.getElementById("timer").innerHTML = hours + "h "
+						+ minutes + "m " + seconds + "s ";
+						
+						// If the count down is over, write some text 
+						if (distance <=0) {
+							clearInterval(x);
+							document.getElementById("timer").innerHTML = "started";
+							$('#console').empty();
+							logMsg("Sending Data Starting...")
+						}
+					}, 1000);
+					}
+
+		function WebSocketTest() {
+		   
+		   if ("WebSocket" in window) {
+			logMsg("device command is supported by your Browser!");
+			  
+			  // Let us open a web socket
+			  var ws = new WebSocket("ws://localhost:8082/webSocket/"+$('#sensorid').val());
+			   
+			  ws.onopen = function() {
+				 
+				 logMsg("connected to device command service");
+			  };
+			   
+			  ws.onmessage = function (evt) {
+				console.log(evt,"evt"); 
+				 var received_msg = evt.data;
+				 logMsg("Device command received...:"+received_msg);
+				 var jsonData = JSON.parse(received_msg);
+				 scheduleDevice(jsonData.startDateTime,jsonData.endDateTime);
+			  };
+			   
+			//   ws.onclose = function() { 
+				 
+			// 	 // websocket is closed.
+			// 	 logMsg("Connection is closed..."); 
+			//   };
+		   } else {
+			 
+			  // The browser doesn't support WebSocket
+			  logMsg("WebSocket NOT supported by your Browser!");
+		   }
+		}
+	
+	//Method to read excel file and convert it into JSON 
+
+	function upload() {
+  var files = document.getElementById('file_upload').files;
+  if(files.length==0){
+    alert("Please choose any file...");
+    return;
+  }
+  var filename = files[0].name;
+  var extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+  if (extension == '.XLS' || extension == '.XLSX') {
+      excelFileToJSON(files[0]);
+  }else{
+      alert("Please select a valid excel file.");
+  }
+}
+function excelFileToJSON(file){
+    try {
+      var reader = new FileReader();
+      reader.readAsBinaryString(file);
+      reader.onload = function(e) {
+ 
+          var data = e.target.result;
+          var workbook = XLSX.read(data, {
+              type : 'binary'
+          });
+          var result = {};
+          workbook.SheetNames.forEach(function(sheetName) {
+              var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+              if (roa.length > 0) {
+                  result[sheetName] = roa;
+              }
+          });
+          //displaying the json result
+        //  var resultEle=document.getElementById("json-result");
+       //   logMsg( JSON.stringify(result, null, 4));
+	   sensorData=result.Sheet1;
+	   //logMsg("sensor data ; "+ JSON.stringify(sensorData));
+         // resultEle.style.display='block';
+		 logMsg("data loaded successfully")
+		 document.getElementById("devicenumber").disabled=false;
+          }
+      }catch(e){
+          console.error(e);
+		  logMsg(e);
+      }
+}
+	</script>
+	   
+
+</head>
+
+<body>
+	<div id="cpheading"> <h1> Sensor Simulator</h1></div>
+	
+	<div id="left-panel">
+		<div class="block_timer"> 
+		<div class="inner-block left"> <span>Time: </span><span id="time"></span></div>
+	</div>
+
+
+	
+		<div class="block">
+		<button id="connect" class="left">check connection</button>
+		<input id="endpointurl" class="right" type="text" placeholder="endpoint" value="http://localhost:8082/messages" />
+		
+	</div> 
+
+	<div class="block"><button id="start" class="left">Start </button>
+		<button id="stop" class="right">Stop</button>
+		
+		</div> 
+
+		<div class="block">
+			<select name="sensortype" id="sensortype" onchange=" " class="left">
+				<option value="sensor1">sensor Type 1</option>
+				<option value="sensor2">sensor type 2</option>
+			
+			</select>
+			<input id="sensorid" type="text" class="right" placeholder="device ID" value=123456 />
+		</div>
+
+	<div class="block">
+		
+		<input id="sensordata"  type="text" class="right" placeholder="Data" readOnly="true" />
+		<select name="packetfreq" id="packetfreq" onchange=" " class="left">
+			<option value="1000">1 sec</option>
+			<option value="3000">3 sec</option>
+			<option value="5000">5 sec</option>
+			<option value="10000">10 sec</option>
+			<option value="20000">20 sec</option>
+			<option value="60000">1 min</option>
+			<option value="300000">5 min</option>
+			<option value="600000">10 min</option>
+
+
+		</select>
+	</div>
+	<div class="block">
+
+	<input type="file" id="file_upload" class="right"/>
+	<select name="usecase" id="usecase" onchange="getUseCase(this)" class="left">
+		<option value="-1">Select Use Case. </option>
+		<option value="1">Use Case 1 </option>
+		<option value="2">Use Case 2</option>
+		
+	</select>
+	</div>
+	<div class="block">
+		
+	<button onclick="upload()" class="left" >Upload</button>  
+	<select name="devicenumber" id="devicenumber" onchange="getComboA(this)" class="right" disabled>
+		<option value="-1">Select Device no. </option>
+		<option value="1">1 </option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+		<option value="11">11</option>
+		<option value="12">12</option>
+		<option value="13">13</option>
+		<option value="14">14</option>
+		<option value="15">15</option>
+		<option value="16">16</option>
+		<option value="17">17</option>
+
+
+	</select>
+	</div>
+		
+	</div>
+		
+	</div> 
+
+		<div class="center">
+
+		</div>
+		
+		
+
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+
+		<script type="text/babel">
+			function tick() {
+				const element = (
+					<div>
+						<p>Time on local machine: {new Date().toLocaleTimeString()}</p>
+					</div>
+				);
+				ReactDOM.render(element, document.getElementById('root_time'));
+			}
+			setInterval(tick, 1000);
+		</script>
+
+		<script>
+
+			var tz;
+			var timer;
+			var sensorData=null;
+
+			try { //if (sessionStorage.getItem("TransactionId") !== undefined) {}else{}
+				for (var i = 0; i < JSON.parse(sessionStorage.getItem("TransactionId")).length; i++) {
+					if (JSON.parse(sessionStorage.getItem("TransactionId"))[i] == null) {
+						continue;
+					}
+					$('#transactions').append(JSON.parse(sessionStorage.getItem("TransactionId"))[i] + "<br>");
+				}
+			} catch (e) {
+				$('#transactions').html('No transactions!')
+			}
+
+			//UI + 
+			var step = 1;
+			$(document).ready(function () {
+				setInterval(function () {
+					$('#time').html(formatDate(new Date()))
+				}
+					, $('#packetreq').val());
+
+				window.onmousemove = logMouseMove;
+
+				function logMouseMove(e) {
+					e = event || window.event;
+					mousePos = { x: e.clientX, y: e.clientY };
+					var w_width = $(window).width();
+					var px;
+					if ((w_width / 2) > e.clientX) {
+						px = parseInt(((w_width / 2) - e.clientX) / 100);
+						_px = parseInt(((w_width / 2) - e.clientX) / 60);
+						$('#tesla').css('left', '' + parseInt(px + 210) + 'px');
+						$('#charge_point').css('left', '' + parseInt(_px + 495) + 'px');
+
+					} else {
+						px = parseInt(((w_width / 2) - e.clientX) / 100);
+						_px = parseInt(((w_width / 2) - e.clientX) / 60);
+						$('#tesla').css('left', '' + parseInt(210 + px) + 'px');
+						$('#charge_point').css('left', '' + parseInt(495 + _px) + 'px');
+					}
+				}
+
+				$('#step2v1').hide();
+				$('#step2v2').hide();
+				$('#step3').hide();
+				$('#back').hide();
+				$('#sc').click(function () {
+					$('#step1').hide();
+					$('#step2v1').show();
+					$('#back').show();
+					step = 2;
+
+				});
+				$('#fc').click(function () {
+					$('#step1').hide();
+					$('#step2v2').show();
+					$('#back').show();
+					step = 2;
+				});
+
+				$('.step2').click(function () {
+					$('#step2v1').hide();
+					$('#step2v2').hide();
+					$('#step3').show();
+				});
+
+
+				$('#back').click(function () {
+					switch (step) {
+						case 1:
+							break;
+						case 2:
+							$('#step1').show();
+							$('#step2v2').hide();
+							$('#step2v1').hide();
+							$('#step3').hide();
+							$('#back').hide();
+							break;
+						case 3:
+							$('#step1').show();
+							$('#step2v2').hide();
+							$('#step2v1').hide();
+							$('#step3').hide();
+							$('#back').hide();
+							break;
+						case 4:
+
+							break;
+						case 5:
+
+							break;
+						default:
+							break;
+					}
+
+				});
+			});
+
+
+			$('.indicator').hide();
+			$('#red').show();
+			//UI -
+			function formatDate(date) {
+
+				const newDate = moment.utc(date).local().format('YYYY-MM-DDTHH:mm:ss[Z]');
+				return newDate;
+				
+
+			
+				// return year + '-' + monthIndex + '-' + day + "T" + h + ":" + m + ":" + s + "Z";
+			}
+
+			var c = 0;
+
+			var connecting;
+
+			var start_id = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var id = randonId();
+			var _websocket = null;
+			var devicedata=[];
+			var counter=0;
+
+		
+			function randonId() {
+				id = "";
+				for (var i = 0; i < 36; i++) {
+					id += possible.charAt(Math.floor(Math.random() * possible.length));
+				}
+				return id;
+			}
+
+			function logMsg(err) {
+				console.log(err);
+				$('#console').append('<li>' + err + '</li>');
+			}
+			function getUseCase(selectObject)
+			{
+				var value = selectObject.value;  
+							console.log(value);
+							if(value==1)
+							{
+								$('#devicenumber').show();
+								document.getElementById("devicenumber").disabled=true;
+								sensorData=[];	
+							}else if(value==2)
+							{
+								$('#devicenumber').hide();
+								sensorData=[];
+							}
+							console.log(sensorData);
+
+			}
+
+			function getComboA(selectObject) {
+ 			 var value = selectObject.value;  
+				console.log(value);
+				console.log(sensorData);
+				this.sensorData.forEach(element => {
+					//if(value==element.indes)
+					var key="D"+value;
+					console.log(element[key]);
+					this.devicedata.push(element[key]);
+					
+				});
+
+				}
+			
+		
+				function startTransaction() {
+					var usecase = $('#usecase').val();
+				if(sensorData ==null)
+				{
+					logMsg("please load data first!!!");
+				
+				}else if(devicedata.length==0 && usecase ==1)
+				{
+					logMsg("please Select Device Number!!!");
+					
+				}else{
+					timer = setInterval(sendSensorValuesFunction,  $('#packetfreq').val());
+				}
+			}
+			
+			function sendSensorValuesFunction() {
+				let url=$('#endpointurl').val();
+				let xhr = new XMLHttpRequest();
+				xhr.open("POST", url,true);
+				let url1= 'http://localhost:3000/api/v1/sensorData';
+				let xhr1 = new XMLHttpRequest();
+				xhr1.open("POST", url1,true);
+				var data1;
+
+				var dt = new Date( );
+			//	$('#sensordata').val()=devicedata[counter];
+				console.log("counter :"+counter);
+				let data="";
+				var selectedUseCase=$('#usecase').val();
+				if(selectedUseCase==1)
+				{
+				document.getElementById("sensordata").value = devicedata[counter];
+data1= {
+  deviceid: $('#sensorid').val(),
+  data: selectedUseCase == 1 ? devicedata[counter] : sensorData[counter],
+  timestamp: dt.getTime()
+};
+				 data ="{"+'deviceid :'+$('#sensorid').val()+',data : '+devicedata[counter]+',timestamp :'+ dt.getTime()+"}";
+				}else
+				{
+					document.getElementById("sensordata").value =JSON.stringify(sensorData[counter]);
+data1 = {
+  deviceid: $('#sensorid').val(),
+  data: selectedUseCase == 1 ? devicedata[counter] : sensorData[counter],
+  timestamp: dt.getTime()
+};
+					data ="{"+'deviceid :'+$('#sensorid').val()+',data : '+JSON.stringify(sensorData[counter])+',timestamp :'+ dt.getTime()+"}";
+				}
+				xhr1.setRequestHeader("Content-Type", "application/json");
+xhr1.send(JSON.stringify(data1));
+				 xhr.send(data);
+			    logMsg("sensor data sent: " + data);
+				
+				//xhr.onload = function() {
+					//logMsg("response status :"+xhr.status);
+					if (url == "http://localhost:8082/messages") //if(statusText == OK)
+					{
+						logMsg("data packet processed");
+					} else {
+						logMsg("something went wrong ");
+					}
+
+				//}
+				
+				counter++;
+				console.log("device length :"+ devicedata.length);
+				console.log("sensor length :"+ sensorData.length);
+
+				if(devicedata.length == counter||sensorData.length==counter)
+					{
+						console.log("reset counter :"+counter);
+						counter=0;
+					}
+			}
+
+			function stopTransaction(transaction_id = false) {
+				clearInterval(timer);
+				let url1= 'http://localhost:3000/api/v1/sensorData';
+				let xhr1 = new XMLHttpRequest();
+				xhr1.open("PUT", url1,true);
+				var data1;
+				var dt = new Date( );
+				data1= {
+				  deviceid: $('#sensorid').val(),
+				  data: "stop",
+				  timestamp: dt.getTime()
+				};
+				xhr1.setRequestHeader("Content-Type", "application/json");
+				xhr1.send(JSON.stringify(data1));
+				logMsg("Sensor stop sending data");
+				//_websocket.send(stpT);
+				//sendconnectorstatus();
+			}
+
+			
+			//bind controls
+			$('#connect').click(function () {
+								
+	
+				var request = new XMLHttpRequest();
+				request.open("POST", $('#endpointurl').val());
+				logMsg("connecting... ");
+				logMsg("endpoint :"+$('#endpointurl').val());
+				//request.send();
+			//	request.onload = function() {
+				//	logMsg("response status :"+request.status);
+					if ($('#endpointurl').val() == "http://localhost:8082/messages") //if(statusText == OK)
+					{
+						//logMsg("response status :"+request.status);
+						logMsg("end point exist");
+					} else {
+						logMsg("end point does not exist ");
+					}
+					WebSocketTest();
+				//}
+			});
+
+
+
+			
+			$('#start').click(function () {
+				
+				startTransaction();
+
+			});
+
+			$('#stop').click(function () {
+				
+				stopTransaction();
+			});
+
+
+			
+			
+			
+			
+			
+
+		</script>
+	</div>
+</div>
+	<div id="right-panel">
+	
+		<ul class="tabset_tabs">
+			<li><a href="#tab3">Logs</a></li>
+		</ul>
+		<div id="tab1" class="tabset_content">
+			<h2 class="tabset_label"></h2>
+			<div>
+
+			</div>
+		</div>
+		
+		<div id="tab3" class="tabset_content transactionlog">
+			<h2 class="tabset_label"></h2>
+			<div id ="timer"></div>
+			<ul id="console"></ul>
+		</div>
+
+		
+
+
+
+	</div>
+</body>
+
+</html>

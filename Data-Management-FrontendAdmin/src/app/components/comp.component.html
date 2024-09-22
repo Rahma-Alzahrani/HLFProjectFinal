@@ -1,0 +1,123 @@
+<mat-sidenav-container
+  class="example-sidenav-container"
+  [style.marginTop.px]="mobileQuery.matches ? 0 : 0"
+>
+  <mat-sidenav
+    class="sidenav"
+    #snav
+    [opened]="!mobileQuery.matches"
+    [mode]="mobileQuery.matches ? 'over' : 'side'"
+    [fixedInViewport]="mobileQuery.matches"
+    fixedTopGap="56"
+  >
+    <mat-toolbar class="t-left text-white mat-elevation-z4">
+      <div class="t-main-head">
+        <span style="font-size: 25px">ADMIN</span>
+      </div>
+    </mat-toolbar>
+    <div class="left-sidenav">
+      <div class="nav-list">
+        <i class="fa fa-users"></i>
+        User Management
+        <div class="sub-nav-list">
+          <div
+            class="nav-list"
+            [routerLink]="['/admin/user-management/provider']"
+            routerLinkActive="nav-list-active"
+          >
+            <img src="../../assets/images/Path 19790.svg" alt="dis" />
+            Providers
+          </div>
+          <div
+            class="nav-list"
+            [routerLink]="['/admin/user-management/consumer']"
+            routerLinkActive="nav-list-active"
+          >
+            <img src="../../assets/images/Path 19790.svg" alt="dis" />
+            Consumers
+          </div>
+        </div>
+      </div>
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/journey']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/Path 19790.svg" alt="dis" />
+        Journey
+      </div>
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/offers']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/discount.svg" alt="dis" />
+        Offers
+      </div>
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/historical-offers']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/discount.svg" alt="dis" />
+        Historical Offers
+      </div>
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/claim-management']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/Path 19790.svg" alt="dis" />
+        Claim Management
+      </div>
+
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/escrow']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/coin-stack.svg" alt="dis" />
+        Escrow
+      </div>
+      <div
+        class="nav-list"
+        [routerLink]="['/admin/costs']"
+        routerLinkActive="nav-list-active"
+      >
+        <img src="../../assets/images/coin-stack.svg" alt="dis" />
+        Costs
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="t-right mat-elevation-z4 my-nav">
+      <button
+        *ngIf="mobileQuery.matches"
+        mat-icon-button
+        (click)="snav.toggle()"
+      >
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>{{ headerTitle }}</span>
+      <span class="spacer"></span>
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="menu"
+        aria-label="Example icon-button with a menu"
+      >
+        <i
+          class="fa fa-user"
+          style="font-size: 1.2rem; padding-right: 0.1rem"
+        ></i>
+        <i class="fa fa-angle-down"></i>
+      </button>
+      <mat-menu #menu="matMenu" class="lg-btn">
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>power_settings_new</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

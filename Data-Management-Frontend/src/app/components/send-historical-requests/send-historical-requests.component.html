@@ -1,0 +1,118 @@
+<div class="router-wrapper">
+    <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+      <p class="lead fs-6 headline"><b>Send Historical Requests</b></p>
+      <span class="sp-hr"></span>
+      <div class="mt-2">
+        <form [formGroup]="requestForm">
+          <div class="row mx-0 mb-1 p-0">
+            <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Historical Offer ID</label>
+              <select name="select_offer" id="s_o" formControlName="offer_id" class="form-control-select"
+                (ngModelChange)="onOfferIdChange(requestForm.controls.offer_id.value)">
+                <option value="" disabled>Select Historical Offer ID</option>
+                <option value="{{item.id}}" *ngFor="let item of offersList">{{item.id}}</option>
+              </select>
+            </div>
+            <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <ng-container>
+              <label class="f-label">Select Multiple Offer ID</label>
+              <mat-form-field class="form-control">
+                <mat-select
+                  [formControl]="offerIDs"
+                  [(value)]="selectedOfferID"
+                  multiple
+                  (selectionChange)="offerDataChange($event)"
+                >
+                  <mat-option
+                    *ngFor="let offer of offerData"
+                    [value]="offer"
+                    style="font-size: 14px;"
+                    >{{
+                      offer
+                    }}</mat-option
+                  >
+                </mat-select>
+              </mat-form-field>
+
+              <!-- <mat-select placeholder="Toppings" [formControl]="toppings" [(value)]="selectedToppings" multiple>
+                  <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+                </mat-select>
+              </mat-form-field> -->
+              <!-- <p>
+                {{selectedToppings | json}}
+              </p> -->
+            </ng-container>
+          </div>
+            <!-- <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Start Date</label>
+              <mat-form-field class="form-control">
+              
+  
+                <input matInput [ngxMatDatetimePicker]="dp1" (ngModelChange)="onStartDateChange()" [min]="current_Date"
+                  formControlName="startDate">
+  
+                <mat-datepicker-toggle matSuffix [for]="$any(dp1)"></mat-datepicker-toggle>
+  
+                <ngx-mat-datetime-picker [showSeconds]="false" [disabled]="false" #dp1></ngx-mat-datetime-picker>
+  
+  
+              </mat-form-field>
+            </div>
+            <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">End Date</label>
+              <mat-form-field class="form-control">
+  
+  
+                <input matInput [ngxMatDatetimePicker]="dp2" (ngModelChange)="onStartDateChange()"
+                  [min]="requestForm.controls.startDate.value" formControlName="endDate">
+  
+                <mat-datepicker-toggle matSuffix [for]="$any(dp2)"></mat-datepicker-toggle>
+  
+                <ngx-mat-datetime-picker [showSeconds]="false" [disabled]="false" #dp2></ngx-mat-datetime-picker>
+  
+  
+              </mat-form-field>
+            </div> -->
+            <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Deposit</label>
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">£</span>
+                <input type="number" min="0" formControlName="cDeposit" class="form-control" placeholder="Deposit"
+                  aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+            </div>
+            <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label"> Price</label>
+              <div class="input-group">
+                <span class="input-group-text" id="basic-addon1">£</span>
+                <input type="number" min="0" formControlName="price" class="form-control" placeholder="Data Price"
+                  aria-label="Username" aria-describedby="basic-addon1">
+              </div>
+            </div>
+            <div class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0">
+              <label class="f-label">Total Payment</label>
+              <input type="text" [value]="requestForm.controls.cDeposit.value+requestForm.controls.price.value"
+                class="form-control" placeholder="Total Payment" readonly>
+            </div>
+          </div>
+        </form>
+        <div class="row my-3 mx-1 mx-sm-1 mx-md-0 mx-lg-0">
+          <div class="col d-none d-sm-none d-md-block"></div>
+          <div class="col-12 col-sm-5 col-md-4 col-lg-3 col-xl-3 d-flex justify-content-end"><button
+              [disabled]="requestForm.invalid" class="btn btn-main2 sendreq-btn" (click)="submitRequest()">Send
+              Request</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="opacity: 0.5; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #fff;"
+  *ngIf="isLoading">
+  <div class="d-flex justify-content-center align-items-center h-100">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+</div>

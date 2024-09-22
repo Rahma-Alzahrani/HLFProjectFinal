@@ -1,0 +1,142 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <p class="lead fs-6 headline"><b>Create Journey</b></p>
+    <span class="sp-hr"></span>
+    <div class="mt-2">
+      <form [formGroup]="journeyForm">
+        <div class="row mx-0 mb-1 p-0">
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">UID</label>
+            <input
+              type="text"
+              formControlName="uid"
+              class="form-control"
+              placeholder="Enter UID"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Type</label>
+            <input
+              type="text"
+              formControlName="type"
+              class="form-control"
+              placeholder="Enter Type"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Valid From</label>
+            <mat-form-field class="form-control">
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp1"
+                (ngModelChange)="onStartDateChange()"
+                [min]="current_Date"
+                formControlName="valid_from"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp1)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp1
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Valid To</label>
+            <mat-form-field class="form-control">
+              <input
+                matInput
+                [ngxMatDatetimePicker]="dp2"
+                (ngModelChange)="onStartDateChange1()"
+                [min]="journeyForm.controls.valid_from.value"
+                formControlName="valid_to"
+              />
+
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="$any(dp2)"
+              ></mat-datepicker-toggle>
+
+              <ngx-mat-datetime-picker
+                [showSeconds]="false"
+                [disabled]="false"
+                #dp2
+              ></ngx-mat-datetime-picker>
+            </mat-form-field>
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Category</label>
+            <input
+              type="text"
+              formControlName="cat"
+              class="form-control"
+              placeholder="Enter Category"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Journey Name</label>
+            <input
+              type="text"
+              formControlName="journey"
+              class="form-control"
+              placeholder="Enter Journey Name"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Days</label>
+            <input
+              type="number"
+              formControlName="days"
+              class="form-control"
+              placeholder="Enter Days"
+            />
+          </div>
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Operator</label>
+            <input
+              type="text"
+              formControlName="operator"
+              class="form-control"
+              placeholder="Enter Operator"
+            />
+          </div>
+        </div>
+      </form>
+      <div class="row mb-3 mx-1 mx-sm-1 mx-md-0 mx-lg-0">
+        <div class="col d-none d-sm-none d-md-block"></div>
+        <div
+          class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-end"
+        >
+          <button
+            [disabled]="journeyForm.invalid"
+            class="btn add-btn btn-main2"
+            (click)="submitJourney()"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

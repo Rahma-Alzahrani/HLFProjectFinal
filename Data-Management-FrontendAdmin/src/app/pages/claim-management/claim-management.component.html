@@ -1,0 +1,76 @@
+<div class="router-wrapper">
+  <div class="card border-0 shadow-sm bg-white mx-3 mb-3">
+    <p class="lead fs-6 headline"><b>Create Claim</b></p>
+    <span class="sp-hr"></span>
+    <div class="mt-2">
+      <form [formGroup]="claimForm">
+        <div class="row mx-0 mb-1 p-0">
+          <div
+            class="my-3 col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-6 mb-2 mb-sm-0 mb-md-0"
+          >
+            <label class="f-label">Claim Time Period</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="hours"
+                placeholder="Hours"
+                [max]="24"
+                [min]="0"
+              />
+              <div
+                class="hours_seprator"
+                style="
+                  margin: 0 20px;
+                  font-size: 20px;
+                  font-weight: 600;
+                  color: #000;
+                  line-height: 1.5;
+                "
+              >
+                :
+              </div>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="minutes"
+                placeholder="Minutes"
+                [max]="60"
+                [min]="0"
+              />
+
+              <div>
+                <h1
+                  class="text-center"
+                  style="
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #000;
+                    line-height: 1.5;
+                    margin: 0 20px;
+                  "
+                >
+                  {{ time }}
+                </h1>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row mb-3 mx-1 mx-sm-1 mx-md-0 mx-lg-0">
+        <div class="col d-none d-sm-none d-md-block"></div>
+        <div
+          class="col-12 col-sm-12 col-md-2 col-lg-2 col-xl-2 d-flex justify-content-end"
+        >
+          <button
+            [disabled]="claimForm.invalid"
+            class="btn add-btn btn-main2"
+            (click)="submitclaim()"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
